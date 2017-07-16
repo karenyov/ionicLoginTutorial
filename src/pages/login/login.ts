@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 import { AlertController, LoadingController, ToastController } from 'ionic-angular';
 
 import { CustomValidators } from "../../validators/custom-validators";
+import { AuthProvider } from '../../providers/auth';
+import { HomePage } from '../../pages/home/home';
 
 /**
  * Generated class for the LoginPage page.
@@ -26,7 +28,8 @@ export class LoginPage {
   loading: any = null;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    public formBuilder: FormBuilder, public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+    public formBuilder: FormBuilder, public toastCtrl: ToastController, public loadingCtrl: LoadingController,
+    public authProvider: AuthProvider) {
     this.loadValidators();
     this.email = this.loginFrmGroup.controls['email'];
     this.password = this.loginFrmGroup.controls['password'];
@@ -45,7 +48,23 @@ export class LoginPage {
 
 
   signin(form: any): void {
-
+    console.log('ok');
+    if (this.toast != null) {
+      this.toast.dismiss();
+    }
+    if (this.loginFrmGroup.valid) {
+      this.showLoader('"Authenticating..."');
+      this.authProvider.login(form).subscribe(
+        data => {
+          this.loading.dismiss();
+          this.navCtrl.setRoot(HomePage, {}, { animate: true, direction: 'forward' });
+        },
+        err => {
+          this.loading.dismiss();
+          this.showToast(`${JSON.parse(err._body).error.message}`);
+        }
+      );
+    }
   }
 
   showLoader(message: string) {
