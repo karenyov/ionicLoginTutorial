@@ -32,7 +32,7 @@ export class AuthProvider {
     return this.http.post(IonicConstants.BASE_URL + '/' + IonicConstants.Auth.LOGIN, bodyReq)
       .map(response => {
         let resp = response.json();
-        storage.set('token_auth', { token: resp.data.token });
+        this.storage.set('token_auth', { token: resp.data.token });
       });
   }
 
