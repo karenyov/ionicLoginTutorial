@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { AlertController, LoadingController, ToastController } from 'ionic-angular';
 
 import { CustomValidators } from "../../validators/custom-validators";
 
@@ -21,9 +22,11 @@ export class LoginPage {
   error: string;
   email: AbstractControl;
   password: AbstractControl;
+  toast: any = null;
+  loading: any = null;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    public formBuilder: FormBuilder) {
+    public formBuilder: FormBuilder, public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
     this.loadValidators();
     this.email = this.loginFrmGroup.controls['email'];
     this.password = this.loginFrmGroup.controls['password'];
@@ -41,4 +44,25 @@ export class LoginPage {
   }
 
 
+  signin(form: any): void {
+
+  }
+
+  showLoader(message: string) {
+    this.loading = this.loadingCtrl.create({
+      content: message //mensagem que será exibida pelo usuário
+    });
+    this.loading.present(); //fazer aparecer o loading na tela
+  }
+
+
+  showToast(message: string) {
+    this.toast = this.toastCtrl.create({
+      position: 'bottom', //posição que será mostrado o toast na tela
+      showCloseButton: true, //mostrar ou não o botão para fechar o toast
+      closeButtonText: 'OK' //texto que será apresentado no botão fechar
+    });
+    this.toast.setMessage(message); //mensagem que será mostrada para o usuário
+    this.toast.present(); //mostra o toast na tela
+  }
 }
